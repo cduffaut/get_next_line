@@ -6,7 +6,7 @@
 /*   By: cduffaut <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/13 13:49:49 by cduffaut          #+#    #+#             */
-/*   Updated: 2023/10/13 18:10:21 by csil             ###   ########.fr       */
+/*   Updated: 2023/10/14 14:03:39 by csil             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,23 +85,29 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-/* Free all of the nodes of the list  */
+/* 
+	Free all of the nodes of the list
+*/
 
-void	free_li(t_list **li)
+void	free_li(t_list **li, t_list *new_node, char *str)
 {
 	t_list	*tmp;
-	t_list	*cpy;
 
-	if (!li)
+	if (NULL == *li)
 		return ;
-	cpy = *li;
-	while (cpy)
+	while (*li)
 	{
-		tmp = cpy->next;
-		free (cpy->str);
-		cpy->str = NULL;
-		free (cpy);
-		cpy = NULL;
-		cpy = tmp;
+		tmp = (*li)->next;
+		free((*li)->str);
+		free(*li);
+		*li = tmp;
+	}
+	*li = NULL;
+	if (new_node->str[0])
+		*li = new_node;
+	else
+	{
+		free(str);
+		free(new_node);
 	}
 }

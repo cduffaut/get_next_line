@@ -6,7 +6,7 @@
 /*   By: cduffaut <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/13 13:49:40 by cduffaut          #+#    #+#             */
-/*   Updated: 2023/10/13 18:09:13 by csil             ###   ########.fr       */
+/*   Updated: 2023/10/14 14:39:30 by csil             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,11 @@ char	*get_next_line(int fd)
 	line = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, line, 0) < 0)
 		return (NULL);
-	line = NULL;
 	create_li(&li, fd);
 	if (!li)
 		return (NULL);
 	create_line(li, &line);
 	clean_li(&li);
-	if (line[0] == '\0')
-	{
-		clean_li(&li);
-		free (line);
-		line = NULL;
-	}
 	return (line);
 }
 
@@ -45,14 +38,13 @@ void	create_li(t_list **li, int fd)
 	int		count;
 	char	*stock;
 
-	count = 1;
-	while (checker(*li) == 0 && count != 0)
+	while (checker(*li) == 0)
 	{
 		stock = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		if (!stock)
 			return ;
 		count = read(fd, stock, BUFFER_SIZE);
-		if ((!(*li) && count == 0) || count == -1)
+		if (count == 0 || count == -1)
 		{
 			free (stock);
 			return ;
@@ -136,9 +128,11 @@ void	clean_li(t_list **li)
 	t_list	*tmp;
 	int		i;
 	int		j;
+	char	*str;
 
+	str = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	new_node = malloc(sizeof(t_list));
-	if (!new_node || !(*li))
+	if (!new_node || !(*li) || !str)
 		return ;
 	i = 0;
 	tmp = ptr_last_node(*li);
@@ -146,16 +140,13 @@ void	clean_li(t_list **li)
 		i++;
 	if (tmp->str[i] && tmp->str[i] == '\n')
 		i++;
-	new_node->str = malloc(sizeof(char) * (ft_strlen(tmp->str) - i + 1));
-	if (!new_node->str)
-		return ;
-	new_node->next = NULL;
 	j = 0;
 	while (tmp->str[i])
-		new_node->str[j++] = tmp->str[i++];
-	new_node->str[j] = '\0';
-	free_li(li);
-	*li = new_node;
+		str[j++] = tmp->str[i++];
+	str[j] = '\0';
+	new_node->str = str;
+	new_node->next = NULL;
+	free_li(li, new_node, str);
 }
 /*
 int	main(int argc, char **argv)

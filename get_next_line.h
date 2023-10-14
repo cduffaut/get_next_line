@@ -6,7 +6,7 @@
 /*   By: cduffaut <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/13 13:50:00 by cduffaut          #+#    #+#             */
-/*   Updated: 2023/10/13 13:50:01 by cduffaut         ###   ########.fr       */
+/*   Updated: 2023/10/14 10:30:52 by csil             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,6 @@ t_list	*ptr_last_node(t_list *li);
 int		checker(t_list *li);
 void	malloc_line(t_list *li, char **line);
 int		ft_strlen(char *str);
-void	free_li(t_list **li);
+void	free_li(t_list **li, t_list *new_node, char *str);
 
 #endif
